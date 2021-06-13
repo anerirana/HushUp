@@ -6,4 +6,4 @@
 # Final model
 
 
-# 1 Dense, 1 dropout, 1 Dense and 1 softmax
+# 1 Dense, 1 dropout, 1 Dense and 1 linear (softmax)

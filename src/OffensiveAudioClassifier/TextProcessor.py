@@ -8,18 +8,17 @@ import numpy as np
 
 class OffensiveTextClassifier():
 
-	def __init__(self, input_file=None, model=None, tokenizer=None):
+	def __init__(self, sentences, model=None, tokenizer=None):
 		self.model_name = model
+		self.sentences = sentences	
+		self.data_loader = self.load_data()
 
-	def preapre_input(self):
+	def load_data(self):
 		tokenizer_model_name = 'albert-base-v2'
 		tokenizer = AlbertTokenizer.from_pretrained(tokenizer_model_name)
 
-		# Create sentence and label lists
-		sentences = np.array(["hey ya bitch !!", "how are you"])
-
 		# We need to add special tokens at the beginning and end of each sentence for BERT to work properly
-		sentences = ["[CLS] " + str(sentence) + " [SEP]" for sentence in sentences]
+		sentences = ["[CLS] " + str(sentence) + " [SEP]" for sentence in self.sentences]
 
 		tokenized_texts = [tokenizer.tokenize(sent) for sent in sentences]
 
@@ -47,8 +46,8 @@ class OffensiveTextClassifier():
 		prediction_dataloader = DataLoader(prediction_data, sampler=prediction_sampler, batch_size=batch_size)
 		return prediction_dataloader
 
-	def generate_features(self, prediction_dataloader):
-		model = AlbertForSequenceClassification.from_pretrained("./models/OLID_ALBERTBase")
+	def get_sentence_embeddings(self, predict=False):
+		model = AlbertForSequenceClassification.from_pretrained("../OffensiveTextClassifier/models/OLID_ALBERTBase")
 		
 		# Put model in evaluation mode
 		model.eval()
@@ -56,7 +55,7 @@ class OffensiveTextClassifier():
 		all_sentence_embeddings = np.array([[]])
 
 		# Predict 
-		for batch in prediction_dataloader:
+		for batch in self.data_loader:
 		
 			# Unpack the inputs from our dataloader
 			b_input_ids, b_input_mask = batch
@@ -83,10 +82,16 @@ class OffensiveTextClassifier():
 			# Store predictions and true labels
 			predictions.append(logits)
 		
-		print("Embedding matrix shape: ",all_sentence_embeddings.shape)
-		print("Predictions: ",np.argmax(predictions[0], axis=1))
+		if predict:
+			return (all_sentence_embeddings, np.argmax(predictions[0], axis=1)) 
+		return all_sentence_embeddings
+		
 
 if __name__ == '__main__':
-	otc = OffensiveTextClassifier()
-	prediction_dataloader = otc.preapre_input()
-	otc.generate_features(prediction_dataloader)
+	# Create sentence and label lists
+	sentences = np.array(["hey ya bitch !!", "how are you"])
+	otc = OffensiveTextClassifier(sentences=sentences)
+	(all_sentence_embeddings, predictions) = otc.get_sentence_embeddings(predict=True)
+	
+	print("Embedding matrix shape: ",all_sentence_embeddings.shape)
+	print("Predictions: ",predictions)
