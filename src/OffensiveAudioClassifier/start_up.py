@@ -7,3 +7,7 @@
 
 
 # 1 Dense, 1 dropout, 1 Dense and 1 linear (softmax)
+
+import pandas as pd
+
+df = pd.DataFrame()

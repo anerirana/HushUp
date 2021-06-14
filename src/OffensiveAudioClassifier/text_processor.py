@@ -1,4 +1,3 @@
-
 import torch
 from torch.utils.data import TensorDataset, DataLoader, SequentialSampler
 from keras.preprocessing.sequence import pad_sequences
@@ -6,17 +5,16 @@ from transformers import AlbertTokenizer, AlbertForSequenceClassification, AdamW
 import pandas as pd
 import numpy as np
 
-class OffensiveTextClassifier():
+class TextProcessor():
 
     def __init__(self, sentences, model_dir='OLID_ALBERTBase', tokenizer_model_name='albert-base-v2'):
         self.model_dir = model_dir
         self.tokenizer_model_name = tokenizer_model_name
         self.data_loader = self.load_data(sentences)
 
-    # to-do: clean data, one time activity call seperately
+    # to-do: clean data, one time activity, move out of this class
     # def clean_data():
         # Expand contractions
-        # Remove everything except alphabets, question mark & excalamtion mark (check how bert processes special charcters and include charcaters in list)
 
     def load_data(self, sentences, clean=False):
         tokenizer = AlbertTokenizer.from_pretrained(self.tokenizer_model_name)
@@ -95,8 +93,8 @@ class OffensiveTextClassifier():
 if __name__ == '__main__':
     # Create sentence and label lists
     sentences = np.array(["hey ya bitch !!", "how are you"])
-    otc = OffensiveTextClassifier(sentences=sentences)
-    (all_sentence_embeddings, predictions) = otc.get_sentence_embeddings(predict=True)
+    tp = TextProcessor(sentences=sentences)
+    (all_sentence_embeddings, predictions) = tp.get_sentence_embeddings(predict=True)
     
     print("Embedding matrix shape: ",all_sentence_embeddings.shape)
     print("Predictions: ",predictions)
