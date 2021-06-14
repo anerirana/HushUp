@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import pandas as pd
 import speech_recognition as sr
 import sys
 import os
@@ -20,18 +21,27 @@ def convert_speech_to_text(AUDIO_FILE):
 	HOUNDIFY_CLIENT_KEY = "7FH_O-rFM0-VTBmBck4hIFhqaPOGe-9-7HWvMDXwlutlJrRzGF4XTAI0vqFULHCQvTpkRCfJuodmQ_b3O_ad6Q==" 
 	try:
 		houndify_speech = r.recognize_houndify(audio, client_id=HOUNDIFY_CLIENT_ID, client_key=HOUNDIFY_CLIENT_KEY)
-		print("\nHoundify thinks you said " + houndify_speech)
+		# to-do: logging
+		# print("\nHoundify thinks you said " + houndify_speech)
 		return houndify_speech
 	except sr.UnknownValueError:
+		# to-do: logging
 		print("\nHoundify could not understand audio")
 		return None
 	except sr.RequestError as e:
+		# to-do: logging
 		print("Could not request results from Houndify service; {0}".format(e))
 		return None
 	except:
+		# to-do: logging
 		print("Exception ocurred while fetching from Houndify !!")
 		return None
 
-#filename = sys.argv[1]
-#os.system("aplay " + filename)
-#print(convert_speech_to_text(filename))
+# to-do:
+# Read filename from csv
+# Get audio from '../../Data/Audios'
+# append text to list
+# concat dfs
+# write to csv
+
+print(convert_speech_to_text('../../Data/Datasets/offensive_yt_1to130/1_00001.wav'))

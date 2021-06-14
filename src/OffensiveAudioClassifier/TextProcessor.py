@@ -13,7 +13,12 @@ class OffensiveTextClassifier():
         self.tokenizer_model_name = tokenizer_model_name
         self.data_loader = self.load_data(sentences)
 
-    def load_data(self, sentences):
+    # to-do: clean data, one time activity call seperately
+    # def clean_data():
+        # Expand contractions
+        # Remove everything except alphabets, question mark & excalamtion mark (check how bert processes special charcters and include charcaters in list)
+
+    def load_data(self, sentences, clean=False):
         tokenizer = AlbertTokenizer.from_pretrained(self.tokenizer_model_name)
 
         # We need to add special tokens at the beginning and end of each sentence for BERT to work properly
