@@ -50,17 +50,17 @@ class AudioProcessor():
     def load_models():
         valence_model_whole = keras.models.load_model(models_dir +'/valence_model.h5')
         print(valence_model_whole.summary())
-        valence_model = Model(valence_model_whole.input, valence_model_whole.layers[-7].output)
+        valence_model = valence_model_whole.pop()
         print(valence_model.summary())
 
         arousal_model_whole = keras.models.load_model(models_dir +'/arousal_model.h5')
         print(arousal_model_whole.summary())
-        arousal_model = Model(arousal_model_whole.input, arousal_model_whole.layers[-7].output)
+        arousal_model = arousal_model_whole.pop()
         print(arousal_model.summary())
 
         dominance_model_whole = keras.models.load_model(models_dir +'/dominance_model.h5')
         print(dominance_model_whole.summary())
-        dominance_model = Model(dominance_model_whole.input, dominance_model_whole.layers[-7].output)
+        dominance_model = dominance_model_whole.pop()
         print(dominance_model.summary())
         return valence_model, arousal_model, dominance_model
 
@@ -94,7 +94,7 @@ class AudioProcessor():
             pickle.dump(valence_attributes_list, f)
         valence_attributes=[]
         for i in range(0, len(valence_attributes_list)):
-            valence_attributes.append(valence_attributes_list[i][0])
+            valence_attributes.append(valence_attributes_list[i])
         emotion_df['Valence_attributes'] = valence_attributes
 
         arousal_attributes_list  = arousal_model.predict(audio_list)
@@ -103,7 +103,7 @@ class AudioProcessor():
             pickle.dump(arousal_attributes_list, f)
         arousal_attributes=[]
         for i in range(0, len(arousal_attributes_list)):
-            arousal_attributes.append(arousal_attributes_list[i][0])
+            arousal_attributes.append(arousal_attributes_list[i])
         emotion_df['Arousal_attributes'] = arousal_attributes
 
         dominance_attributes_list  = dominance_model.predict(audio_list)
@@ -112,7 +112,7 @@ class AudioProcessor():
             pickle.dump(dominance_attributes_list, f)
         dominance_attributes=[]
         for i in range(0, len(dominance_attributes_list)):
-            dominance_attributes.append(dominance_attributes_list[i][0])
+            dominance_attributes.append(dominance_attributes_list[i])
         emotion_df['Dominance_attributes'] = dominance_attributes
         #store_individual_pickles(audio_list, filenames_list, valence_model, arousal_model, dominance_model)
         return emotion_df
