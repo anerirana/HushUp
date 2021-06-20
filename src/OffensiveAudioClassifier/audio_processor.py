@@ -9,7 +9,7 @@ from keras.models import Sequential
 
 class AudioProcessor():
 
-    def __init__(self, filenames_list =[], audio_list =[], audio_dir, working_dir, audio_length, target_sr, models_dir, filename_index):
+    def __init__(self):
         AUDIO_DIR = '../../Data/Datasets/'
         WORKING_DIR = '../../Data/Datasets/EmotionData'
         MODELS_DIR = '../AudioEmotionClassifier/Models'
