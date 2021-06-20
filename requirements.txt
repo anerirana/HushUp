@@ -6,3 +6,7 @@ torchvision
 transformers
 sentencepiece
 SpeechRecognition
+glob
+os
+librosa
+pickle
