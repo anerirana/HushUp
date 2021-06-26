@@ -65,13 +65,16 @@ class AudioProcessor():
             with open(self.working_dir +'/filewise_all_attriutes/'+filename+'.pkl', 'wb') as f:
                 pickle.dump(all_emotion_attributes, f)
 
-    def get_emotion_attributes(self):
-        emotion_df = pd.DataFrame(columns = ['Audio_name', 'Valence_attributes', 'Arousal_attributes', 'Dominance_attributes'])
+    def get_emotion_attributes(self, audio_list):
+        emotion_df = pd.DataFrame(columns = ['Audio_name'])
         valence_model, arousal_model, dominance_model = self.load_models()
-        wav_filepath_list = glob.glob(self.audio_dir +'*.wav', recursive = True)
+
+        wav_filepath_list = []
+        for file_name in audio_list:
+            wav_filepath_list.append(self.audio_dir + file_name + '.wav')
         audio_list, filenames_list = self.convert_wav_to_timeseries(wav_filepath_list)
         audio_list = np.array(audio_list)
-        # print(audio_list.shape)
+        emotion_df['Audio_name'] = wav_filepath_list
         with open(self.working_dir +'/audio_timeseries.pkl', 'wb') as f:
             pickle.dump(audio_list, f)
         with open(self.working_dir +'/filenames.pkl', 'wb') as f:
@@ -81,27 +84,22 @@ class AudioProcessor():
         # print(valence_attributes_list.shape)
         with open(self.working_dir +'/valence_attributes.pkl', 'wb') as f:
             pickle.dump(valence_attributes_list, f)
-        valence_attributes=[]
-        for i in range(0, len(valence_attributes_list)):
-            valence_attributes.append(valence_attributes_list[i])
-        emotion_df['Valence_attributes'] = valence_attributes
+        valence_df = pd.DataFrame(valence_attributes_list)
 
         arousal_attributes_list  = arousal_model.predict(audio_list)
         # print(arousal_attributes_list.shape)
         with open(self.working_dir +'/arousal_attributes.pkl', 'wb') as f:
             pickle.dump(arousal_attributes_list, f)
-        arousal_attributes=[]
-        for i in range(0, len(arousal_attributes_list)):
-            arousal_attributes.append(arousal_attributes_list[i])
-        emotion_df['Arousal_attributes'] = arousal_attributes
+        arousal_df = pd.DataFrame(arousal_attributes_list)
 
         dominance_attributes_list  = dominance_model.predict(audio_list)
         # print(dominance_attributes_list.shape)
         with open(self.working_dir +'/dominance_attributes.pkl', 'wb') as f:
             pickle.dump(dominance_attributes_list, f)
         dominance_attributes=[]
-        for i in range(0, len(dominance_attributes_list)):
-            dominance_attributes.append(dominance_attributes_list[i])
-        emotion_df['Dominance_attributes'] = dominance_attributes
+        dominance_df = pd.DataFrame(dominance_attributes_list)
+        
+
+        emotion_df = pd.concat([emotion_df, valence_df, arousal_df, dominance_df], axis=1)
         #store_individual_pickles(audio_list, filenames_list, valence_model, arousal_model, dominance_model)
         return emotion_df
