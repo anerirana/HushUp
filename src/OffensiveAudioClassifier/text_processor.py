@@ -81,7 +81,7 @@ class TextProcessor():
 
             # Store predictions and true labels
             predictions.append(logits)
-        
+        all_sentence_embeddings = pd.DataFrame(all_sentence_embeddings)
         if predict:
             return (all_sentence_embeddings, np.argmax(predictions[0], axis=1)) 
         return all_sentence_embeddings

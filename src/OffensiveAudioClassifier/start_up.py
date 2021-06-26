@@ -1,5 +1,4 @@
-# Store all audios filenames and labels
-# Convert all audio from speech to text and store
+# Store all audios filenames, text and labels
 # Get speech features for all audios
 # Data file, file_name, label, converted_text
 # Get text features for all audios
@@ -12,9 +11,12 @@ import pandas as pd
 from audio_processor import AudioProcessor
 from text_processor import TextProcessor
 
+DATA_DIR = '../../Data'
+METADATA_FILE_NAME = '/compiled_data.csv'
+FEATURE_FILE_NAME = '/feature_set.csv'
 
-METADATA_FILE_PATH = '../../Data/compiled_data.csv'
-df = pd.read_csv(METADATA_FILE_PATH)
+
+df = pd.read_csv(DATA_DIR + METADATA_FILE_NAME)
 print("Data Loaded")
 print(df.shape)
 
@@ -30,3 +32,5 @@ print(emotion_df.shape)
 
 feature_df = pd.concat([df, text_df, emotion_df], axis=1)
 print(feature_df.shape)
+
+feature_df.to_csv(DATA_DIR + FEATURE_FILE_NAME, index=False)

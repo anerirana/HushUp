@@ -66,7 +66,7 @@ class AudioProcessor():
                 pickle.dump(all_emotion_attributes, f)
 
     def get_emotion_attributes(self, audio_list):
-        emotion_df = pd.DataFrame(columns = ['Audio_name'])
+        emotion_df = pd.DataFrame()
         valence_model, arousal_model, dominance_model = self.load_models()
 
         wav_filepath_list = []
@@ -74,7 +74,6 @@ class AudioProcessor():
             wav_filepath_list.append(self.audio_dir + file_name + '.wav')
         audio_list, filenames_list = self.convert_wav_to_timeseries(wav_filepath_list)
         audio_list = np.array(audio_list)
-        emotion_df['Audio_name'] = wav_filepath_list
         with open(self.working_dir +'/audio_timeseries.pkl', 'wb') as f:
             pickle.dump(audio_list, f)
         with open(self.working_dir +'/filenames.pkl', 'wb') as f:
