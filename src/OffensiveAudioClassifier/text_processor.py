@@ -11,10 +11,8 @@ class TextProcessor():
         self.model_dir = model_dir
         self.tokenizer_model_name = tokenizer_model_name
         self.data_loader = self.load_data(sentences)
-
-    # to-do: clean data, one time activity, move out of this class
-    # def clean_data():
-        # Expand contractions
+        
+        self.model_path = '../OffensiveTextClassifier/models/' + self.model_dir
 
     def load_data(self, sentences, clean=False):
         tokenizer = AlbertTokenizer.from_pretrained(self.tokenizer_model_name)
@@ -49,8 +47,7 @@ class TextProcessor():
         return prediction_dataloader
 
     def get_sentence_embeddings(self, predict=False):
-        model_path = '../OffensiveTextClassifier/models/' + self.model_dir
-        model = AlbertForSequenceClassification.from_pretrained(model_path)
+        model = AlbertForSequenceClassification.from_pretrained(self.model_path)
         
         # Put model in evaluation mode
         model.eval()
@@ -80,7 +77,7 @@ class TextProcessor():
                 all_sentence_embeddings = np.vstack((all_sentence_embeddings,sentence_embeddings)) if all_sentence_embeddings.size else sentence_embeddings     
 
             # Move logits and labels to CPU
-            logits = logits.detach().cpu().numpy()
+            logits = logits.numpy() #.detach().cpu()
 
             # Store predictions and true labels
             predictions.append(logits)
