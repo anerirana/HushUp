@@ -1,7 +1,13 @@
 import torch
 from torch.utils.data import TensorDataset, DataLoader, SequentialSampler
 from keras.preprocessing.sequence import pad_sequences
+
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import ConfusionMatrixDisplay
+
 from transformers import AlbertTokenizer, AlbertForSequenceClassification, AdamW, get_linear_schedule_with_warmup
+
 import pandas as pd
 import numpy as np
 
@@ -86,12 +92,26 @@ class TextProcessor():
             return (all_sentence_embeddings, np.argmax(predictions[0], axis=1)) 
         return all_sentence_embeddings
         
-
+DATA_DIR = '../../Data'
+METADATA_FILE_NAME = '/compiled_data.csv'
 if __name__ == '__main__':
     # Create sentence and label lists
-    sentences = np.array(["hey ya bitch !!", "how are you"])
-    tp = TextProcessor(sentences=sentences)
-    (all_sentence_embeddings, predictions) = tp.get_sentence_embeddings(predict=True)
+    # sentences = np.array(["hey ya bitch !!", "how are you"])
+    df = pd.read_csv(DATA_DIR + METADATA_FILE_NAME)
+    print("Data Loaded")
+    print(df.shape)
+
+    tp = TextProcessor(df['Text'])
+
+    # tp = TextProcessor(sentences=sentences)
+    (_, predictions) = tp.get_sentence_embeddings(predict=True)
+    print(predictions.shape)
+    print(type(predictions))
+    print(predictions)
+    print(df['Label'])
+    report = classification_report(df['Label'], predictions, zero_division=0)
+    print(report)
+
+    cm = confusion_matrix(df['Label'], predictions)
+    ConfusionMatrixDisplay(cm, display_labels=["non-offensive","offensive"]).plot()
     
-    print("Embedding matrix shape: ",all_sentence_embeddings.shape)
-    print("Predictions: ",predictions)
