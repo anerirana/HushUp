@@ -23,7 +23,7 @@ class TextProcessor():
     def load_data(self, sentences, clean=False):
         tokenizer = AlbertTokenizer.from_pretrained(self.tokenizer_model_name)
 
-        # We need to add special tokens at the beginning and end of each sentence for BERT to work properly
+        # Add special tokens at the beginning and end of each sentence for BERT to work properly
         sentences = ["[CLS] " + str(sentence) + " [SEP]" for sentence in sentences]
 
         tokenized_texts = [tokenizer.tokenize(sent) for sent in sentences]
