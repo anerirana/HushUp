@@ -8,7 +8,7 @@ import contractions
 # Check what special charcacter set is in the corpus and decide what to keep
 # Remove everything excpet alphabet and required special charcters
 
-class DataCleaner():
+class TweetCleaner():
 
     def __init__(self, input_file, output_file):
         self.input_file = input_file
@@ -68,5 +68,5 @@ class DataCleaner():
             return " "
         return re.sub(pattern, replace, input_txt)
 
-dc = DataCleaner("olid_labeled_tweets.csv", "olid_processed_tweets.csv")
+dc = TweetCleaner("olid_labeled_tweets.csv", "olid_processed_tweets.csv")
 dc.start_cleaning()
