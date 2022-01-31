@@ -3,11 +3,6 @@ import numpy as np
 import re
 import contractions
 
-# Future Work :-
-# Convert unicode emoticons to usable format
-# Check what special charcacter set is in the corpus and decide what to keep
-# Remove everything excpet alphabet and required special charcters
-
 class TweetCleaner():
 
     def __init__(self, input_file, output_file):
@@ -30,7 +25,7 @@ class TweetCleaner():
         self.noisy_tweets['tweet'] = self.noisy_tweets['tweet'].apply(lambda text: self.remove_pattern("https?://\S+", text))         
 
         # Expand contractions
-        self.noisy_tweets['tweet'] = self.noisy_tweets['tweet'].apply(lambda text: contractions.fix(text))
+        # self.noisy_tweets['tweet'] = self.noisy_tweets['tweet'].apply(lambda text: contractions.fix(text))
 
         # Correct symbols in tweets
         self.noisy_tweets['tweet'] = self.noisy_tweets['tweet'].apply(lambda text: text.replace("&amp;","and"))
@@ -51,7 +46,7 @@ class TweetCleaner():
         # Remove the leading and trailing spaces as well
         self.noisy_tweets['tweet'] = self.noisy_tweets['tweet'].apply(lambda text: text.strip())
 
-        # Comment to check how much data has been dropped
+        # To check how much data has been dropped
         # dropped_data = self.noisy_tweets[self.noisy_tweets['tweet'].apply(lambda text: len(text) == 0)]
         # print("Total Data dropped: ", dropped_data.shape)
         # dropped_data = dropped_data[dropped_data['class'] == '1']
@@ -68,5 +63,5 @@ class TweetCleaner():
             return " "
         return re.sub(pattern, replace, input_txt)
 
-dc = TweetCleaner("olid_labeled_tweets.csv", "olid_processed_tweets.csv")
+dc = TweetCleaner("HushUp/Data/olid_labeled_tweets.csv", "HushUp/Data/olid_processed_tweets.csv")
 dc.start_cleaning()
