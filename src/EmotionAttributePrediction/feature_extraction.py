@@ -177,6 +177,6 @@ def f2_dirWavFeatureExtraction(dirName, mt_win, mt_step, st_win, st_step):
                 all_mt_feats = np.vstack((all_mt_feats, mt_term_feats))
     return (all_mt_feats, wav_file_list2, mt_feature_names)
 
-dirName = "/Users/anerirana/Documents/Development.nosync/HushUpV2.0/Modules/EmotionDetector/allAudios/*/"
+dirName = "/HushUp/Data/Datasets/*/"
 audio_feature_file = "audio_features.csv"
 f2_feature_extract_and_store(dirName, audio_feature_file)
