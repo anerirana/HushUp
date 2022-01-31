@@ -1,2 +1,1 @@
-# HushUp
-Hate speech detection on multi-media data 
+# HushUp: Hate speech detection
